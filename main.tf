@@ -11,7 +11,7 @@ terraform {
 
 provider "aws" {
   profile = "default"
-  region  = "us-west-2"
+  region  = "us-west-1"
 }
 
 #Gerar VPC
@@ -69,9 +69,9 @@ resource "aws_security_group" "sg" {
 
 #Gerar EC2 
 resource "aws_instance" "app_server" {
-  ami = "ami-0cf2b4e024cdb6960"
+  ami = "ami-08012c0a9ee8e21c4"
   instance_type = "t2.micro"
-  key_name = "devops"
+  key_name = "devops2"
   subnet_id = aws_subnet.subnet.id
   associate_public_ip_address = true
   security_groups = [aws_security_group.sg.id]

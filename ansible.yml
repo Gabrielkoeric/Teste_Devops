@@ -1,0 +1,10 @@
+---
+- hosts: all
+  tasks:
+    - name: Instalar dependencias
+      ansible.builtin.apt:
+        pkg:
+          - docker.io
+          - postgresql-16
+        update_cache: yes
+      become: yes
