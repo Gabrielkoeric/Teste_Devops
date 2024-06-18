@@ -7,7 +7,14 @@
           - docker.io
           - postgresql
           - python3-psycopg2
+          - python3-pip
         update_cache: yes
+      become: yes
+
+    - name: Criar usuário no PostgreSQL
+      ansible.builtin.shell: |
+        sudo -u postgres psql -c "CREATE USER admin WITH PASSWORD 'admin';"
+        sudo -u postgres psql -c "ALTER USER admin SUPERUSER;"
       become: yes
 
     - name: Criar database, tabela e inserção dos dados
@@ -15,4 +22,28 @@
         sudo -u postgres psql -c "CREATE DATABASE testdb;"
         sudo -u postgres psql -d testdb -c "CREATE TABLE table1 (column1 integer, column2 integer);"
         sudo -u postgres psql -d testdb -c "INSERT INTO table1 (column1) SELECT a.column1 FROM generate_series(1, 1000000) AS a (column1);"
+      become: yes
+
+    - name: Copiar Dockerfile e index.html para o servidor remoto
+      ansible.builtin.copy:
+        src: "{{ item }}"
+        dest: /home/
+        mode: 0644
+      with_items:
+        - /var/www/magazord/Teste_Devops/dockerfile
+        - /var/www/magazord/Teste_Devops/index.html
+      become: yes
+
+    - name: Build PHP + Apache Docker image
+      ansible.builtin.command:
+        cmd: sudo docker build -t apache-php-image /home
+      become: yes
+
+    - name: Run Docker container
+      ansible.builtin.docker_container:
+        name: apache-php-container
+        image: apache-php-image
+        state: started
+        ports:
+          - "80:80"
       become: yes
