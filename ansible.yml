@@ -1,10 +1,18 @@
 ---
 - hosts: all
   tasks:
-    - name: Instalar dependencias
+    - name: Instalar dependencias do sistema
       ansible.builtin.apt:
         pkg:
           - docker.io
-          - postgresql-16
+          - postgresql
+          - python3-psycopg2
         update_cache: yes
+      become: yes
+
+    - name: Criar database, tabela e inserção dos dados
+      ansible.builtin.shell: |
+        sudo -u postgres psql -c "CREATE DATABASE testdb;"
+        sudo -u postgres psql -d testdb -c "CREATE TABLE table1 (column1 integer, column2 integer);"
+        sudo -u postgres psql -d testdb -c "INSERT INTO table1 (column1) SELECT a.column1 FROM generate_series(1, 1000000) AS a (column1);"
       become: yes
