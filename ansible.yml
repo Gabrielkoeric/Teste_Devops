@@ -72,7 +72,7 @@
         cmd: sudo docker build -t jenkins /home/jenkins
       become: yes
 
-    - name: Run Docker container2
+    - name: Run Docker container
       ansible.builtin.docker_container:
         name: jenkins
         image: jenkins
