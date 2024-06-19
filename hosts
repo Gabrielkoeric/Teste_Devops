@@ -1,2 +1,2 @@
 [ec2]
-54.241.62.71 ansible_user=ubuntu ansible_ssh_private_key_file=/var/www/devops2.pem
+52.53.204.77 ansible_user=ubuntu ansible_ssh_private_key_file=/var/www/devops2.pem

@@ -8,6 +8,7 @@
           - postgresql
           - python3-psycopg2
           - python3-pip
+          - python3-boto3
         update_cache: yes
       become: yes
 
@@ -46,4 +47,37 @@
         state: started
         ports:
           - "80:80"
+      become: yes
+
+    - name: Copiar script python backup
+      ansible.builtin.copy:
+        src: "{{ item }}"
+        dest: /home/
+        mode: 0644
+      with_items:
+        - /var/www/magazord/Teste_Devops/backup.py
+      become: yes
+    
+    - name: Copiar Dockerfile para o jenkins
+      ansible.builtin.copy:
+        src: "{{ item }}"
+        dest: /home/
+        mode: 0644
+      with_items:
+        - /var/www/magazord/Teste_Devops/jenkins
+      become: yes
+
+    - name: Build jenkins
+      ansible.builtin.command:
+        cmd: sudo docker build -t jenkins /home/jenkins
+      become: yes
+
+    - name: Run Docker container2
+      ansible.builtin.docker_container:
+        name: jenkins
+        image: jenkins
+        state: started
+        ports:
+          - "8080:8080"
+          - "50000:50000"
       become: yes

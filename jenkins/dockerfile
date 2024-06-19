@@ -1,0 +1,12 @@
+FROM jenkins/jenkins:lts
+
+# Atualizar lista de pacotes e instalar o vim
+#RUN apt-get update && apt-get install -y vim
+RUN apt-get update && apt-get install -y vim && apt-get install -y
+
+# Expor as portas necessárias
+EXPOSE 8080
+EXPOSE 50000
+
+# Definir o volume
+VOLUME /var/jenkins_home
